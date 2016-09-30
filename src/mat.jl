@@ -60,7 +60,7 @@ function Mat{T}(::Type{T}, mtype::C.MatType=C.MATSEQAIJ; comm::MPI.Comm=MPI.COMM
   chk(C.MatSetType(p[], mtype))
   Mat{T}(p[])
 end
-
+#=
 """
   Create a matrix of a particular size, optionally specifying the pre-allocation.
   If pre-allocation is not specified, no preallocation is done
@@ -1487,5 +1487,5 @@ end
 
   return D
 end
-
+=#
  

@@ -3,7 +3,8 @@
 # for environment variables.
 
 type Options{T<:Scalar} <: Associative{String,String}; end
-const OPTIONS = [T => Options{T}() for T in C.petsc_type]
+#const OPTIONS = [T => Options{T}() for T in C.petsc_type]
+const OPTIONS = Dict(T => Options{T}() for T in C.petsc_type)
 export OPTIONS, withoptions
 
 typealias SymOrStr Union{AbstractString,Symbol}
