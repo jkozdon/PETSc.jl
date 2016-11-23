@@ -60,12 +60,12 @@ function Mat{T}(::Type{T}, mtype::C.MatType=C.MATSEQAIJ; comm::MPI.Comm=MPI.COMM
   chk(C.MatSetType(p[], mtype))
   Mat{T}(p[])
 end
-#=
+
 """
   Create a matrix of a particular size, optionally specifying the pre-allocation.
   If pre-allocation is not specified, no preallocation is done
 """
-function Mat{T}(::Type{T}, m::Integer=C.PETSC_DECIDE, n::Integer=C.PETSC_DECIDE;
+function Mat{T}(::Type{T}, m::Integer, n::Integer;
                 mlocal::Integer=C.PETSC_DECIDE, nlocal::Integer=C.PETSC_DECIDE,
                 bs=1, nz::Integer=0, nnz::AbstractVector=PetscInt[],
                 onz::Integer=0, onnz::AbstractVector=PetscInt[],
@@ -633,7 +633,7 @@ end
 Base.similar{T}(a::PetscMat{T}, ::Type{T}) = similar(a)
 
 # TODO: make T2 -> Type{T2}
-function Base.similar{T}(a::PetscMat{T}, T2::Type)
+function Base.similar{T, T2}(a::PetscMat{T}, ::Type{T2})
   MType = gettype(a)
   return Mat(T2, size(a)..., comm=comm(a), mtype=MType)
 end
@@ -1487,5 +1487,5 @@ end
 
   return D
 end
-=#
+
  

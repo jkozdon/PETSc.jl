@@ -371,18 +371,18 @@ function Base.similar{T}(x::Vec{T})
 end
 
 Base.similar{T}(x::Vec{T}, ::Type{T}) = similar(x)
-function Base.similar{T}(x::Vec{T}, T2::Type)
+function Base.similar{T, T2}(x::Vec{T}, ::Type{T2})
   VType = gettype(x)
   Vec(T2, length(x), VType; comm=comm(x), mlocal=lengthlocal(x))
 end
 
-function Base.similar{T}(x::Vec{T}, T2::Type, len::Union{Int,Dims})
+function Base.similar{T, T2}(x::Vec{T}, ::Type{T2}, len::Dims)
   VType = gettype(x)
   length(len) == 1 || throw(ArgumentError("expecting 1-dimensional size"))
   len[1]==length(x) && T2==T ? similar(x) : Vec(T2, len[1], vtype=VType; comm=comm(x))
 end
 
-function Base.similar{T}(x::Vec{T}, len::Union{Int,Dims})
+function Base.similar{T}(x::Vec{T}, len::Dims)
   VType = gettype(x)
   length(len) == 1 || throw(ArgumentError("expecting 1-dimensional size"))
   len[1]==length(x) ? similar(x) : Vec(T, len[1], vtype=VType; comm=comm(x))
@@ -766,7 +766,7 @@ end
 # For complex numbers, VecMax and VecMin apparently return the max/min
 # real parts, which doesn't match Julia's maximum/minimum semantics.
 
-function Base.norm{T<:Real}(x::Union{Vec{T},Vec{Complex{T}}}, p::Number)
+function Base.norm{T<:Real}(x::Union{Vec{T},Vec{Complex{T}}}, p::Real)
   v = Ref{T}()
   n = p == 1 ? C.NORM_1 : p == 2 ? C.NORM_2 : p == Inf ? C.NORM_INFINITY :
   throw(ArgumentError("unrecognized Petsc norm $p"))
@@ -918,7 +918,7 @@ end
   lengths.  If some a ghost vectors and some are not, the map is applied
   only to the local part
 """
-function map!{T, T2}(f, dest::Vec{T}, src1::Vec{T}, src2::Vec{T2},  src_rest::Vec{T2}...)
+function map!{T, T2}(f, dest::Vec{T}, src1::Vec{T}, src2::Vec{T},  src_rest::Vec{T}...)
 
   # annoying workaround for #13651
   srcs = (src1, src2, src_rest...)
@@ -941,7 +941,8 @@ function map!{T, T2}(f, dest::Vec{T}, src1::Vec{T}, src2::Vec{T2},  src_rest::Ve
   n = length(srcs)
   len = 0
   len_prev = 0
-  src_arrs = Array(LocalVectorRead{T2}, n)
+  # was T2
+  src_arrs = Array(LocalVectorRead{T}, n)
   use_length_local = false
 
   dest_arr = LocalVector(dest)
