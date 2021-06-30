@@ -1,6 +1,6 @@
 # PETSc
 
-[![Build Status](https://github.com/JuliaParallel/PETSc.jl/workflows/CI/badge.svg)](https://github.com/JuliaParallel/PETSc.jl/actions/workflows/ci.yml)
+[![Build Status](https://github.com/JuliaParallel/PETSc.jl/actions/workflows/ci.yml/badge.svg)](https://github.com/JuliaParallel/PETSc.jl/actions/workflows/ci.yml)
 
 This package provides a low level interface for
 [PETSc](https://www.mcs.anl.gov/petsc/)
